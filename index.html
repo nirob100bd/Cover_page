@@ -359,7 +359,7 @@ function getStudent(i){
 
 /* ---------- drawing: one A4 page, everything in millimetres ---------- */
 function draw(ctx, s, sh, st, preview){
-  var PT = 0.3528, BODY = 14, HEAD = 16, LH = 6.9, dry = false;
+  var PT = 0.3528, BODY = 14, HEAD = 14, LH = 6.9, dry = false;
   function F(pt, w){ return (w || 600) + " " + (pt*PT*s) + "px " + FAM; }
 
   ctx.save();
