@@ -561,7 +561,7 @@ function refreshHints(){
     var id = st.id.trim(); hint.className = "hint";
     if (dups[i]) { hint.textContent = "Already added — each student can appear only once."; hint.classList.add("bad"); if (inId) inId.classList.add("err"); return; }
     if (inId) inId.classList.remove("err");
-    if (id && findStudent(id)) { hint.textContent = "✓ Found in the student list. You can still edit the name."; hint.classList.add("ok"); }
+    if (id && findStudent(id)) { hint.textContent = "✓ Found in the student list."; hint.classList.add("ok"); }
     else if (id) { hint.textContent = "Not in the list — type the name yourself."; hint.classList.add("warn"); }
     else hint.textContent = i === 0 ? "Type your ID and your name fills in automatically." : "Type an ID and the name fills in, or type the name yourself.";
   });
