@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#0a1330">
+<meta name="theme-color" content="#000000">
 <title>Cover Page Maker</title>
 <style>
   /* Inter (open licence) is embedded as a close match for Apple's SF Pro. On Apple devices the
@@ -25,13 +25,13 @@
     --b1:#5aa9ff; --b2:#8fd3ff; --b3:#7d8cff; --b4:#6fe0d0; --blob-op:.55;
   }
   :root[data-theme="dark"]{
-    --bg1:#050a18; --bg2:#0a1330; --text:#f4f7ff; --muted:#b9c3dc; --hair:rgba(255,255,255,.2);
-    --card:rgba(14,22,46,.58); --card-edge:rgba(255,255,255,.2); --field:rgba(255,255,255,.09); --field-edge:rgba(255,255,255,.22);
+    --bg1:#000; --bg2:#000; --text:#f4f7ff; --muted:#b9c3dc; --hair:rgba(255,255,255,.2);
+    --card:rgba(22,24,32,.52); --card-edge:rgba(255,255,255,.2); --field:rgba(255,255,255,.09); --field-edge:rgba(255,255,255,.22);
     --seg-on:rgba(255,255,255,.22); --accent:#5aa4ff; --accent-tint:rgba(90,164,255,.22); --glow:rgba(90,164,255,.6); --ph:#97a3c0;
     --err:#ff8a82; --err-tint:rgba(255,105,97,.16); --ok:#6fe08c; --ok-tint:rgba(93,212,122,.16); --warn:#ffc15e;
     --shadow:0 1px 0 rgba(255,255,255,.1) inset,0 14px 50px rgba(0,0,0,.45);
-    --nav:rgba(8,14,32,.55);
-    --b1:#1d6fe0; --b2:#12a6d6; --b3:#5a4de0; --b4:#0fb89f; --blob-op:.62;
+    --nav:rgba(0,0,0,.55);
+    --b1:#1d6fe0; --b2:#12a6d6; --b3:#4a46d8; --b4:#0b8f84; --blob-op:.42;
   }
   .nav img{ background:#fff; border-radius:8px; padding:3px; height:36px; }
   *{ box-sizing:border-box; }
@@ -80,6 +80,23 @@
     .hero{ padding-top:22px; }
   }
   .col{ display:grid; gap:16px; min-width:0; }
+  .dates label{ display:flex; align-items:center; min-height:24px; }
+  .dates{ display:grid; align-items:end; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 12px; }
+  @media (max-width:340px){ .dates{ grid-template-columns:1fr; } }
+  @media (max-width:560px){
+    .col{ gap:12px; } .wrap{ gap:12px; padding-bottom:40px; }
+    .card{ padding:14px; } .card-h h2{ font-size:18px; }
+    label{ margin:11px 0 5px; }
+    input,select{ min-height:44px; padding:9px 12px; }
+    textarea{ min-height:58px; padding:9px 12px; }
+    .seg{ margin-top:10px; } .seg button{ padding:8px; }
+    .stu{ margin-top:10px; padding:2px 12px 10px; }
+    .hint{ margin-top:5px; } .sum{ margin-bottom:2px; }
+    .hero{ padding-top:14px; padding-bottom:6px; } .hero h1{ font-size:26px; }
+    .nav-in{ padding:8px 16px; } .nav img{ height:30px!important; }
+    .stu-grid{ grid-template-columns:96px minmax(0,1fr)!important; gap:0 8px; }
+    .row2{ grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr)!important; gap:8px!important; }
+  }
 
   .card{ background:var(--card); border:1px solid var(--card-edge); border-radius:22px; padding:20px; box-shadow:var(--shadow);
     -webkit-backdrop-filter:blur(26px) saturate(170%); backdrop-filter:blur(26px) saturate(170%); }
@@ -162,7 +179,7 @@
 </style>
 <script>
 (function(){ var m = null; try { m = localStorage.getItem("ju_cover_theme"); } catch(e){}
-  if (m !== "light" && m !== "dark") m = (window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+  if (m !== "light" && m !== "dark") m = "dark";
   document.documentElement.setAttribute("data-theme", m); })();
 </script>
 </head>
@@ -239,12 +256,16 @@
 
     <section class="card" id="secDates">
       <div class="card-h"><h2>Dates</h2></div>
+      <div class="dates">
       <div id="labOpt">
         <label for="labDate">Lab Date <span class="opt">(optional)</span><button type="button" id="labDateClear" class="lnk hidden">Clear</button></label>
         <input id="labDate" type="date">
       </div>
+      <div>
       <label for="date">Submission Date</label>
       <input id="date" type="date">
+      </div>
+      </div>
     </section>
 
     <section class="card" id="secGo">
@@ -338,7 +359,7 @@ function getStudent(i){
 
 /* ---------- drawing: one A4 page, everything in millimetres ---------- */
 function draw(ctx, s, sh, st, preview){
-  var PT = 0.3528, BODY = 16, HEAD = 18, LH = 7.8, dry = false;
+  var PT = 0.3528, BODY = 14, HEAD = 16, LH = 6.9, dry = false;
   function F(pt, w){ return (w || 600) + " " + (pt*PT*s) + "px " + FAM; }
 
   ctx.save();
@@ -378,26 +399,27 @@ function draw(ctx, s, sh, st, preview){
   }
 
   /* lays the page out (and paints it unless dry); k < 1 tightens spacing so long text still fits */
+  var K0 = 0.92;
   function layout(k){
     var isLab = sh.type === "lab";
     var G = ((isLab || sh.useAsgName) ? 1 : 1.3) * k;
 
     if (!dry && logo.complete && logo.naturalWidth) {
-      var lw = 50, lh = lw * logo.naturalHeight / logo.naturalWidth;
-      ctx.drawImage(logo, (210 - lw)/2*s, 13*s, lw*s, lh*s);
+      var lw = 44, lh = lw * logo.naturalHeight / logo.naturalWidth;
+      ctx.drawImage(logo, (210 - lw)/2*s, 14*s, lw*s, lh*s);
     }
 
-    var y = (isLab ? (sh.useLabDate ? 96 : 99) : (sh.useAsgName ? 99 : 107)) - (1 - k) * 24;
+    var y = (isLab ? (sh.useLabDate ? 86 : 89) : (sh.useAsgName ? 89 : 96)) - (K0 - k) * 24;
     centered([lab(isLab ? "Lab Report No:" : "Assignment No:", HEAD, 2.2), Object.assign(pick(sh.num, "00"), { pt:HEAD })], y);
 
     if (!isLab && sh.useAsgName) {
       y += 15 * k;
-      var an = wrapInline("Assignment Name:", pick(sh.asgName, "Type the assignment name"), 172);
+      var an = wrapInline("Assignment Name:", pick(sh.asgName, "Type the assignment name"), 160);
       an.forEach(function(L, i){ centered(L, y); if (i < an.length - 1) y += LH; });
     }
     if (isLab) {
       y += 15 * k;
-      var ex = wrapInline("Experiment Name:", pick(sh.exp, "Type the experiment name"), 172);
+      var ex = wrapInline("Experiment Name:", pick(sh.exp, "Type the experiment name"), 160);
       ex.forEach(function(L, i){ centered(L, y); if (i < ex.length - 1) y += LH; });
     }
 
@@ -444,9 +466,9 @@ function draw(ctx, s, sh, st, preview){
     return y;
   }
 
-  var k = 1; dry = true;
+  var k = K0; dry = true;
   var bottom = layout(k);
-  while (bottom > 280 && k > 0.55) { k -= 0.05; bottom = layout(k); }
+  while (bottom > 280 && k > 0.5) { k -= 0.05; bottom = layout(k); }
   dry = false; layout(k);
   ctx.restore();
 }
